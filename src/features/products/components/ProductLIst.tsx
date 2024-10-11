@@ -1,9 +1,10 @@
 import {FunctionComponent} from "react";
+import {Button} from "@mui/material";
 
 const ProductList: FunctionComponent = () => {
     return (
         <div>
-            Product List
+            <Button variant='contained' color={'success'}>My Button</Button>
         </div>
     );
 };
