@@ -26,7 +26,7 @@
       "@/features/*": ["./src/features/*"],
       "@/routes/*": ["./src/routes/*"],
       "@/hooks/*": ["./src/hooks/*"],
-      "@/redux/1*": ["./src/redux/*"],
+      "@/redux/*": ["./src/redux/*"],
       "@/utils/*": ["./src/utils/*"],
       "@/apis/*": ["./src/apis/*"],
       "@/assets/*": ["./src/assets/*"],
