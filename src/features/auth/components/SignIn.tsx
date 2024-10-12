@@ -61,8 +61,6 @@ export default function SignUp() {
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
   const defaultTheme = createTheme({ palette: { mode } });
   //const SignUpTheme = createTheme(getSignUpTheme(mode));
-  const [nameError, setNameError] = React.useState(false);
-  const [nameErrorMessage, setNameErrorMessage] = React.useState('');
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
@@ -95,7 +93,7 @@ export default function SignUp() {
   const validateInputs = () => {
     const email = document.getElementById('email') as HTMLInputElement;
     const password = document.getElementById('password') as HTMLInputElement;
-    const name = document.getElementById('name') as HTMLInputElement;
+    // const name = document.getElementById('name') as HTMLInputElement;
 
     let isValid = true;
 
@@ -117,27 +115,16 @@ export default function SignUp() {
       setPasswordErrorMessage('');
     }
 
-    if (!name.value || name.value.length < 1) {
-      setNameError(true);
-      setNameErrorMessage('Name is required.');
-      isValid = false;
-    } else {
-      setNameError(false);
-      setNameErrorMessage('');
-    }
-
     return isValid;
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (nameError || emailError || passwordError) {
+    if (emailError || passwordError) {
       event.preventDefault();
       return;
     }
     const data = new FormData(event.currentTarget);
     console.log({
-      name: data.get('name'),
-      lastName: data.get('lastName'),
       email: data.get('email'),
       password: data.get('password'),
     });
@@ -159,27 +146,13 @@ export default function SignUp() {
               variant="h4"
               sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
             >
-              Sign up
+              Sign In
             </Typography>
             <Box
               component="form"
               onSubmit={handleSubmit}
               sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
             >
-              <FormControl>
-                <FormLabel htmlFor="name">Full name</FormLabel>
-                <TextField
-                  autoComplete="name"
-                  name="name"
-                  required
-                  fullWidth
-                  id="name"
-                  placeholder="Jon Snow"
-                  error={nameError}
-                  helperText={nameErrorMessage}
-                  color={nameError ? 'error' : 'primary'}
-                />
-              </FormControl>
               <FormControl>
                 <FormLabel htmlFor="email">Email</FormLabel>
                 <TextField
@@ -213,7 +186,7 @@ export default function SignUp() {
               </FormControl>
               <FormControlLabel
                 control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive updates via email."
+                label="Remember me"
               />
               <Button
                 type="submit"
@@ -221,12 +194,12 @@ export default function SignUp() {
                 variant="contained"
                 onClick={validateInputs}
               >
-                Sign up
+                Sign In
               </Button>
               <Typography sx={{ textAlign: 'center' }}>
-                Already have an account?{' '}
+                You don't have an account?{' '}
                 <span>
-                  <Link to="/sign-in" style={{textDecoration: "none"}}> Sign in </Link>
+                  <Link to={'/sign-up'} style={{textDecoration: "none"}}> Sign Up </Link>
                 </span>
               </Typography>
             </Box>
