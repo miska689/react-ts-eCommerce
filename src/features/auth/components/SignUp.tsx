@@ -1,10 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import { Link } from 'react-router-dom';
@@ -21,6 +19,14 @@ import {
 // import getSignUpTheme from './theme/getSignUpTheme';
 // import { GoogleIcon, FacebookIcon, SitemarkIcon } from './CustomIcons';
 import TemplateFrame from './TemplateFrame';
+import { useForm, SubmitHandler } from "react-hook-form";
+
+interface ISignUpFormField {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -60,13 +66,13 @@ export default function SignUp() {
   const [mode, setMode] = React.useState<PaletteMode>('light');
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
   const defaultTheme = createTheme({ palette: { mode } });
-  //const SignUpTheme = createTheme(getSignUpTheme(mode));
-  const [nameError, setNameError] = React.useState(false);
-  const [nameErrorMessage, setNameErrorMessage] = React.useState('');
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<ISignUpFormField>()
+
   // This code only runs on the client side, to determine the system color preference
   React.useEffect(() => {
     // Check if there is a preferred mode in localStorage
@@ -92,56 +98,12 @@ export default function SignUp() {
     setShowCustomTheme((prev) => !prev);
   };
 
-  const validateInputs = () => {
-    const email = document.getElementById('email') as HTMLInputElement;
-    const password = document.getElementById('password') as HTMLInputElement;
-    const name = document.getElementById('name') as HTMLInputElement;
 
-    let isValid = true;
+  const onSubmit: SubmitHandler<ISignUpFormField> = (data) => {
+      console.log('Check data: ', data);
+  }
 
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage('Please enter a valid email address.');
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage('');
-    }
-
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage('');
-    }
-
-    if (!name.value || name.value.length < 1) {
-      setNameError(true);
-      setNameErrorMessage('Name is required.');
-      isValid = false;
-    } else {
-      setNameError(false);
-      setNameErrorMessage('');
-    }
-
-    return isValid;
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (nameError || emailError || passwordError) {
-      event.preventDefault();
-      return;
-    }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get('name'),
-      lastName: data.get('lastName'),
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
+  console.log("Error list ", errors)
 
   return (
     <TemplateFrame
@@ -163,63 +125,71 @@ export default function SignUp() {
             </Typography>
             <Box
               component="form"
-              onSubmit={handleSubmit}
+              onSubmit={handleSubmit(onSubmit)}
               sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
             >
               <FormControl>
-                <FormLabel htmlFor="name">Full name</FormLabel>
+                <FormLabel htmlFor="firstName">First name</FormLabel>
                 <TextField
                   autoComplete="name"
-                  name="name"
-                  required
                   fullWidth
-                  id="name"
+                  id="firstName"
                   placeholder="Jon Snow"
-                  error={nameError}
-                  helperText={nameErrorMessage}
-                  color={nameError ? 'error' : 'primary'}
+                  error={Boolean(errors.firstName?.message)}
+                  helperText={errors.firstName?.message}
+                  {...register('firstName', {
+                    required: "First name is required!"
+                  })}
+                />
+              </FormControl><FormControl>
+                <FormLabel htmlFor="lastName">Last name</FormLabel>
+                <TextField
+                  autoComplete="name"
+                  fullWidth
+                  id="lastName"
+                  placeholder="Jon Snow"
+                  error={Boolean(errors.lastName?.message)}
+                  helperText={errors.lastName?.message}
+                  {...register('lastName', {
+                    required: "Last name is required!"
+                  })}
                 />
               </FormControl>
               <FormControl>
                 <FormLabel htmlFor="email">Email</FormLabel>
                 <TextField
-                  required
                   fullWidth
                   id="email"
                   placeholder="your@email.com"
-                  name="email"
                   autoComplete="email"
                   variant="outlined"
-                  error={emailError}
-                  helperText={emailErrorMessage}
-                  color={passwordError ? 'error' : 'primary'}
+                  error={ Boolean(errors.email?.message) }
+                  helperText={ errors.email?.message }
+                  {...register('email', {
+                    required: "Email is required!"
+                  })}
                 />
               </FormControl>
               <FormControl>
                 <FormLabel htmlFor="password">Password</FormLabel>
                 <TextField
-                  required
                   fullWidth
-                  name="password"
                   placeholder="••••••"
                   type="password"
                   id="password"
                   autoComplete="new-password"
                   variant="outlined"
-                  error={passwordError}
-                  helperText={passwordErrorMessage}
-                  color={passwordError ? 'error' : 'primary'}
+                  error={Boolean(errors.password?.message)}
+                  helperText={errors.password?.message}
+                  {...register('password', {
+                    required: "Password is required!"
+                  })}
                 />
               </FormControl>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive updates via email."
-              />
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                onClick={validateInputs}
               >
                 Sign up
               </Button>
