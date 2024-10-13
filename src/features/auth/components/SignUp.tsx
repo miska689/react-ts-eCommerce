@@ -1,32 +1,27 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
-import { Link } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
+
 import {
   createTheme,
   ThemeProvider,
   styled,
   PaletteMode,
 } from '@mui/material/styles';
-// import getSignUpTheme from './theme/getSignUpTheme';
-// import { GoogleIcon, FacebookIcon, SitemarkIcon } from './CustomIcons';
 import TemplateFrame from './TemplateFrame';
-import { useForm, SubmitHandler } from "react-hook-form";
-
-interface ISignUpFormField {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup"
+import { signInSchema } from "@/features/auth/schemas/AuthSchema.ts";
+import { IFieldFormInput } from "@/features/auth/interfaces/AuthInterface.ts";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -62,16 +57,21 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
   }),
 }));
 
-export default function SignUp() {
+export default function SignUp(
+    { handleClick }: { handleClick: () => void }
+) {
   const [mode, setMode] = React.useState<PaletteMode>('light');
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
   const defaultTheme = createTheme({ palette: { mode } });
+
 
   const {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm<ISignUpFormField>()
+  } = useForm<IFieldFormInput>({
+    resolver: yupResolver(signInSchema)
+  })
 
   // This code only runs on the client side, to determine the system color preference
   React.useEffect(() => {
@@ -99,8 +99,9 @@ export default function SignUp() {
   };
 
 
-  const onSubmit: SubmitHandler<ISignUpFormField> = (data) => {
+  const onSubmit = (data: IFieldFormInput) => {
       console.log('Check data: ', data);
+      handleClick()
   }
 
   console.log("Error list ", errors)
@@ -137,9 +138,7 @@ export default function SignUp() {
                   placeholder="Jon Snow"
                   error={Boolean(errors.firstName?.message)}
                   helperText={errors.firstName?.message}
-                  {...register('firstName', {
-                    required: "First name is required!"
-                  })}
+                  {...register('firstName')}
                 />
               </FormControl><FormControl>
                 <FormLabel htmlFor="lastName">Last name</FormLabel>
@@ -150,9 +149,7 @@ export default function SignUp() {
                   placeholder="Jon Snow"
                   error={Boolean(errors.lastName?.message)}
                   helperText={errors.lastName?.message}
-                  {...register('lastName', {
-                    required: "Last name is required!"
-                  })}
+                  {...register('lastName')}
                 />
               </FormControl>
               <FormControl>
@@ -165,9 +162,7 @@ export default function SignUp() {
                   variant="outlined"
                   error={ Boolean(errors.email?.message) }
                   helperText={ errors.email?.message }
-                  {...register('email', {
-                    required: "Email is required!"
-                  })}
+                  {...register('email')}
                 />
               </FormControl>
               <FormControl>
@@ -181,9 +176,7 @@ export default function SignUp() {
                   variant="outlined"
                   error={Boolean(errors.password?.message)}
                   helperText={errors.password?.message}
-                  {...register('password', {
-                    required: "Password is required!"
-                  })}
+                  {...register('password')}
                 />
               </FormControl>
               <Button
