@@ -15,6 +15,8 @@ import SignUpPage from "@/features/auth/pages/SignUpPage.tsx";
 import SignInPage from "@/features/auth/pages/SignInPage.tsx";
 import Toast from "@/components/Toast.tsx";
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
+import Dashboard from "@/components/Dashboard/Dashboard.tsx";
+import AdminRoute from "@/routes/admin.routes.tsx";
 
 
 const router = createBrowserRouter([
@@ -30,6 +32,16 @@ const router = createBrowserRouter([
 				path: 'profile',
 				element: <div>User Profile</div>
 			}
+		]
+	},
+	{
+		path: "/admin",
+		element: <AdminRoute/>,
+		children: [
+			{
+				path: '',
+				element: <Dashboard/>
+			},
 		]
 	},
 	{

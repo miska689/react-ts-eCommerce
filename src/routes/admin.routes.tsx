@@ -1,9 +1,7 @@
 import {Outlet} from "react-router-dom";
-import Header from "@/components/Header/Header.tsx";
-import Footer from "@/components/Footer/Footer.tsx";
 import useAuthenticate from "@/hooks/useAuthenticate.tsx";
 
-const UserRoutes = () => {
+const AdminRoute = () => {
     const { isLoading, error } = useAuthenticate();
 
     if (isLoading) return <p>Loading...</p>
@@ -11,11 +9,9 @@ const UserRoutes = () => {
 
     return (
         <div>
-            <Header/>
             <Outlet/>
-            <Footer/>
         </div>
     );
 };
 
-export default UserRoutes;
+export default AdminRoute;

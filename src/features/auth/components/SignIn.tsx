@@ -24,6 +24,7 @@ import {useForm} from "react-hook-form";
 import {signInSchema} from "@/features/auth/schemas/AuthSchema.ts";
 import {yupResolver} from "@hookform/resolvers/yup";
 import useLoginMutation from "@/features/auth/hooks/useLoginMutation.tsx";
+import {useAppSelector} from "@/redux/hook.ts";
 
 const Card = styled(MuiCard)(({theme}) => ({
 	display: 'flex',
@@ -64,6 +65,7 @@ export default function SignUp() {
 	const [showCustomTheme, setShowCustomTheme] = React.useState(true);
 	const defaultTheme = createTheme({palette: {mode}});
 	const mutation = useLoginMutation();
+	const {user, isAuthenticated} = useAppSelector(state => state.user);
 
 	const {
 		register,
@@ -86,6 +88,9 @@ export default function SignUp() {
 			).matches;
 			setMode(systemPrefersDark ? 'dark' : 'light');
 		}
+
+		console.log("User: ", user);
+		console.log("Is Authenticated: ", isAuthenticated);
 	}, []);
 
 	const toggleColorMode = () => {

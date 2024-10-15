@@ -4,7 +4,7 @@ import productsClient from "@/apis/productsClient.ts";
 import {useAppSelector} from "@/redux/hook.ts";
 
 const ProductList: FunctionComponent = () => {
-    const { user, isAuthenticated } = useAppSelector(state => state.user);
+    const { isAuthenticated } = useAppSelector(state => state.user);
 
     const fetchProducts = async () => {
         const res = productsClient.getAllProducts();
@@ -19,8 +19,7 @@ const ProductList: FunctionComponent = () => {
     return (
         <div>
             <Button variant='contained' color={'success'}>My Button</Button>
-            <h1>Hello {user.firstName + ' ' + user.lastName}</h1>
-            { isAuthenticated ? <h1>Authenticated</h1> : <h1>Not Authenticated</h1> }
+            {isAuthenticated ? <p>Authenticated</p> : <p>Not Authenticated</p>}
         </div>
     );
 };

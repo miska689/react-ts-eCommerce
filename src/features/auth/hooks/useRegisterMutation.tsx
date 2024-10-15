@@ -14,8 +14,7 @@ const UseRegisterMutation = () => {
 		mutationFn: (authData: IAuthPayload) => {
 			return AuthApis.register(authData)
 		},
-		onSuccess: async (data) => {
-			console.log("Succes: ", data);
+		onSuccess: async () => {
 			const resData = await AuthApis.getMe();
 
 			dispatch(setUser({
@@ -23,7 +22,8 @@ const UseRegisterMutation = () => {
 				lastName: resData.lastName,
 				email: resData.email,
 				avatar: resData.avatar,
-				role: resData.role
+				role: resData.role,
+				isAuthenticated: true
 			}));
 
 			dispatch(toast.success("You are registered successfully!"));

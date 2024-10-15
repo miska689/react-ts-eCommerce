@@ -4,7 +4,8 @@ import authApis from "@/apis/authApis.ts";
 const UseGetMeQuery = () => {
 	return useQuery({
 		queryKey: ['me'],
-		queryFn: authApis.getMe
+		queryFn: authApis.getMe,
+		retry: 1,
 	});
 
 };
