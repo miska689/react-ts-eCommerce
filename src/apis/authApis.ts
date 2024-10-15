@@ -8,6 +8,10 @@ const authApis = {
 	getMe: () => {
 		const url = "users/me";
 		return axiosClient.get<unknown, IUserData>(url);
+	},
+	login: (data: ILoginPayload) => {
+		const url = "auth/login";
+		return axiosClient.post(url, data)
 	}
 }
 

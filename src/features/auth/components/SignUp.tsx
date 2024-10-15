@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Link, useNavigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -19,13 +19,9 @@ import {
 import TemplateFrame from './TemplateFrame';
 import {SubmitHandler, useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup"
-import {signInSchema} from "@/features/auth/schemas/AuthSchema.ts";
-import {IFieldFormInput} from "@/features/auth/interfaces/AuthInterface.ts";
-import {useAppDispatch} from "@/redux/hook.ts";
-import {toast} from "@/redux/toast/toast.action.ts";
-import AuthApis from "@/apis/authApis.ts";
-import {useMutation} from "@tanstack/react-query";
-import {setUser} from "@/redux/user/user.slice.ts";
+import {signUpSchema} from "@/features/auth/schemas/AuthSchema.ts";
+import {IFieldFormInputSignUp} from "@/features/auth/interfaces/AuthInterface.ts";
+import useRegisterMutation from "@/features/auth/hooks/useRegisterMutation.tsx";
 // import {toast} from "@/redux/toast/toast.action.ts";
 
 const Card = styled(MuiCard)(({theme}) => ({
@@ -66,16 +62,14 @@ export default function SignUp() {
 	const [mode, setMode] = React.useState<PaletteMode>('light');
 	const [showCustomTheme, setShowCustomTheme] = React.useState(true);
 	const defaultTheme = createTheme({palette: {mode}});
-	const dispatch = useAppDispatch();
-	const navigation = useNavigate();
-
+	const mutation = useRegisterMutation();
 
 	const {
 		register,
 		handleSubmit,
 		formState: {errors}
-	} = useForm<IFieldFormInput>({
-		resolver: yupResolver(signInSchema)
+	} = useForm<IFieldFormInputSignUp>({
+		resolver: yupResolver(signUpSchema)
 	})
 
 	// This code only runs on the client side, to determine the system color preference
@@ -93,32 +87,6 @@ export default function SignUp() {
 		}
 	}, []);
 
-	const mutation = useMutation({
-		mutationFn: (authData: IAuthPayload) => {
-			return AuthApis.register(authData)
-		},
-		onSuccess: async (data) => {
-			console.log("Succes: ", data);
-			const resData = await AuthApis.getMe();
-
-			dispatch(setUser({
-				firstName: resData.firstName,
-				lastName: resData.lastName,
-				email: resData.email,
-				avatar: resData.avatar,
-				role: resData.role
-			}));
-
-			dispatch(toast.success("You are registered successfully!"));
-
-			navigation('/products')
-		},
-		onError: (error) => {
-			dispatch(toast.error("Something went wrong"));
-			console.log(error)
-		},
-	});
-
 
 	const toggleColorMode = () => {
 		const newMode = mode === 'dark' ? 'light' : 'dark';
@@ -131,7 +99,7 @@ export default function SignUp() {
 	};
 
 
-	const onSubmit:SubmitHandler<IFieldFormInput> = async (data) => {
+	const onSubmit:SubmitHandler<IFieldFormInputSignUp> = async (data) => {
 
 		const AuthData = { ...data, avatar: ''} as IAuthPayload;
 

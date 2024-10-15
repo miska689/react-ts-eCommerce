@@ -8,10 +8,21 @@ interface IAuthPayload {
 	avatar: string;
 }
 
+interface ILoginPayload {
+	email: string;
+	password: string;
+}
+
 interface IUserData {
 	email: string;
 	firstName: string;
 	lastName: string;
 	avatar: string;
 	role: string;
+}
+
+interface IErrorResponse {
+	message: string
+	status: string
+	statusCode: number
 }
