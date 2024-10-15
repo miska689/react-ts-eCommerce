@@ -21,6 +21,8 @@ import {
 // import getSignUpTheme from './theme/getSignUpTheme';
 // import { GoogleIcon, FacebookIcon, SitemarkIcon } from './CustomIcons';
 import TemplateFrame from './TemplateFrame';
+import {useAppDispatch} from "@/redux/hook.ts";
+import {toast} from "@/redux/toast/toast.action.ts";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -65,6 +67,8 @@ export default function SignUp() {
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
+
+  const dispatch = useAppDispatch();
   // This code only runs on the client side, to determine the system color preference
   React.useEffect(() => {
     // Check if there is a preferred mode in localStorage
@@ -119,6 +123,8 @@ export default function SignUp() {
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
     if (emailError || passwordError) {
       event.preventDefault();
       return;
@@ -128,6 +134,8 @@ export default function SignUp() {
       email: data.get('email'),
       password: data.get('password'),
     });
+
+    dispatch(toast.success("You are logged in!"));
   };
 
   return (
