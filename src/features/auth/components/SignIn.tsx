@@ -59,7 +59,7 @@ const SignUpContainer = styled(Stack)(({theme}) => ({
 	}),
 }));
 
-export default function SignUp(: any = functionality) {
+export default function SignUp() {
 	const [mode, setMode] = React.useState<PaletteMode>('light');
 	const [showCustomTheme, setShowCustomTheme] = React.useState(true);
 	const defaultTheme = createTheme({palette: {mode}});
