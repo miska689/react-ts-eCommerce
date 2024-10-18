@@ -1,16 +1,17 @@
 import useGetMeQuery from "@/hooks/useGetMeQuery.tsx";
 import {useAppSelector} from "@/redux/hook.ts";
 import {useDispatch} from "react-redux";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect} from "react";
 import {deleteUser, setUser} from "@/redux/user/user.slice.ts";
 
 const UseAuthenticate = () => {
 	const { isLoading, data, error } = useGetMeQuery();
-	const { isAuthenticated } = useAppSelector(state => state.user);
+	const { isAuthenticated, user } = useAppSelector(state => state.user);
 
 	const dispatch = useDispatch();
 	const navigation = useNavigate();
+	const location = useLocation();
 
 	useEffect(() => {
 		if (data && !isAuthenticated) {
@@ -32,6 +33,18 @@ const UseAuthenticate = () => {
 			navigation('/sign-in', { replace: true });
 		}
 	}, [isLoading, isAuthenticated, navigation, data]);
+
+	useEffect(() => {
+		if (
+			location.pathname === '/admin' &&
+			data &&
+			user &&
+			user.role !== 'ADMIN' &&
+			isAuthenticated
+		) {
+			navigation('/')
+		}
+	}, [location, navigation, data, user, isAuthenticated])
 
 	useEffect(() => {
 		if (error) {

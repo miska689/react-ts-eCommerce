@@ -12,7 +12,11 @@ const authApis = {
 	login: (data: ILoginPayload) => {
 		const url = "auth/login";
 		return axiosClient.post(url, data)
-	}
+	},
+	logout: () => {
+		const url = "auth/logout";
+		return axiosClient.post(url)
+	},
 }
 
 export default authApis;

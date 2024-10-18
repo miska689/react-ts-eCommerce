@@ -28,7 +28,9 @@ const useLoginMutation = () => {
 
 			dispatch(toast.success("You are logged in successfully!"));
 
-			navigation('/products')
+
+			if (resData.role === 'ADMIN') navigation('/admin');
+			if (resData.role === 'USER') navigation('/products')
 		},
 		onError: (error: AxiosError<unknown, IErrorResponse>) => {
 			dispatch(toast.error(error.message));

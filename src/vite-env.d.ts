@@ -18,11 +18,23 @@ interface IUserData {
 	firstName: string;
 	lastName: string;
 	avatar: string;
-	role: string;
+	role: 'USER' | 'ADMIN' | '';
 }
 
 interface IErrorResponse {
 	message: string
 	status: string
 	statusCode: number
+}
+
+interface IBackendResponse<BackendDataType> {
+	message: string
+	data?: BackendDataType
+}
+
+interface ICategoriesResponse {
+	id: number
+	name: string
+	icon: string
+	status: boolean
 }

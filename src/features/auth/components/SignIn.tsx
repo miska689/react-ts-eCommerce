@@ -7,7 +7,7 @@ import Divider from '@mui/material/Divider';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
@@ -25,6 +25,7 @@ import {signInSchema} from "@/features/auth/schemas/AuthSchema.ts";
 import {yupResolver} from "@hookform/resolvers/yup";
 import useLoginMutation from "@/features/auth/hooks/useLoginMutation.tsx";
 import {useAppSelector} from "@/redux/hook.ts";
+import useAuthenticate from "@/hooks/useAuthenticate.tsx";
 
 const Card = styled(MuiCard)(({theme}) => ({
 	display: 'flex',
@@ -65,7 +66,9 @@ export default function SignUp() {
 	const [showCustomTheme, setShowCustomTheme] = React.useState(true);
 	const defaultTheme = createTheme({palette: {mode}});
 	const mutation = useLoginMutation();
+	const { isLoading  } = useAuthenticate();
 	const {user, isAuthenticated} = useAppSelector(state => state.user);
+	const navigate = useNavigate();
 
 	const {
 		register,
@@ -92,6 +95,13 @@ export default function SignUp() {
 		console.log("User: ", user);
 		console.log("Is Authenticated: ", isAuthenticated);
 	}, []);
+
+	React.useEffect(() => {
+		if (isAuthenticated && !isLoading) {
+			if (user.role === 'ADMIN') navigate('/admin');
+			if (user.role === 'USER') navigate('/products');
+		}
+	}, [isAuthenticated, user, navigate, isLoading]);
 
 	const toggleColorMode = () => {
 		const newMode = mode === 'dark' ? 'light' : 'dark';
