@@ -6,13 +6,29 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import UseCategoryQuery from "@/features/category/hooks/useCategoryQuery.tsx";
+import CategoryIcons from "@/components/CategoryIcons.tsx";
+import {Button} from "@mui/material";
 
 
-export default function CategoryListAdmin() {
+export default function CategoryListAdmin(
+	{
+		handleOpenConfirmModal,
+		setCategoryId
+	} : {
+		handleOpenConfirmModal: () => void
+		setCategoryId: (categoryId: number) => void
+	}) {
 	const { data, isLoading, error } = UseCategoryQuery();
 
 	if (isLoading) return <>Loading...</>
 	if (error) return <>An error has occurred: {error}</>
+
+	function handleDeleteCategory(id: number) {
+		return () => {
+			setCategoryId(id);
+			handleOpenConfirmModal();
+		}
+	}
 
 	return (
 		<TableContainer component={Paper} >
@@ -20,11 +36,12 @@ export default function CategoryListAdmin() {
 				<TableHead>
 					<TableRow>
 						<TableCell>Name</TableCell>
-						<TableCell align="right">Icons</TableCell>
+						<TableCell align="right">Icon</TableCell>
+						<TableCell align="right">Delete Category</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{data?.data.map((row) => (
+					{data?.data?.map((row) => (
 						<TableRow
 							key={row.id}
 							sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -32,7 +49,12 @@ export default function CategoryListAdmin() {
 							<TableCell component="th" scope="row">
 								{row.name}
 							</TableCell>
-							<TableCell align="right">{row.icon}</TableCell>
+							<TableCell align="right">
+								{CategoryIcons[row.icon]}
+							</TableCell>
+							<TableCell align={'right'}>
+								<Button onClick={handleDeleteCategory(row.id)} variant={'outlined'} color={'error'}>Delete</Button>
+							</TableCell>
 						</TableRow>
 					))}
 				</TableBody>
