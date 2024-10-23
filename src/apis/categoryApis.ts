@@ -13,6 +13,10 @@ const categoryApis = {
 	delete: (id: number) => {
 		const url = `/categories/${id}`;
 		return axiosClient.delete<unknown, IBackendResponse<unknown>>(url);
+	},
+	update: (id: number, data: ICategoryFormInput) => {
+		const url = `/categories/${id}`;
+		return axiosClient.put<unknown, IBackendResponse<ICategoriesResponse>>(url, data);
 	}
 }
 

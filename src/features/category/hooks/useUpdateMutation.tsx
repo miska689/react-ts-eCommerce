@@ -1,15 +1,16 @@
+import {useDispatch} from "react-redux";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import categoryApis from "@/apis/categoryApis.ts";
-import {useDispatch} from "react-redux";
 import {toast} from "@/redux/toast/toast.action.ts";
+import { ICategoryUpdateInput } from "@/features/category/interfaces/categoryForm.ts";
 
-const UseCategoryMutation = () => {
+const UseUpdateMutation = () => {
 	const dispatch = useDispatch();
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: categoryApis.create,
-		onSuccess: (data: IBackendResponse<ICategoriesResponse>) => {
+		mutationFn: ({ id, data } : ICategoryUpdateInput) => categoryApis.update(id, data),
+		onSuccess: (data) => {
 			dispatch(toast.success(data.message))
 			queryClient.invalidateQueries({ queryKey: ['category'] })
 		},
@@ -20,4 +21,4 @@ const UseCategoryMutation = () => {
 	})
 };
 
-export default UseCategoryMutation;
+export default UseUpdateMutation;
