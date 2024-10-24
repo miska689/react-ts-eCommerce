@@ -14,6 +14,8 @@ import {productSchema} from "@/features/products/schemas/productSchema.ts";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {SubmitHandler, useForm} from "react-hook-form";
 import useProductCreateMutation from "@/features/products/hooks/useProductCreateMutation.tsx";
+import useProductUpdateMutation from "@/features/products/hooks/useProductUpdateMutation.tsx";
+import {imageFetchToFile} from "@/utils/imageFetch.ts";
 
 // import categoryIcons from "@/components/CategoryIcons.tsx";
 
@@ -41,7 +43,14 @@ const style = {
 	p: 4,
 };
 
-export default function ProductModal() {
+interface IProductModalProps {
+	open: boolean;
+	setOpen: (value: boolean) => void;
+	selectedProduct: IProductBody | undefined;
+	setSelectedProduct: (value: IProductBody | undefined) => void;
+}
+
+export default function ProductModal({ open, setOpen, selectedProduct, setSelectedProduct }: IProductModalProps) {
 	const { data } = useCategoryQuery();
 	// Form input
 	const {
@@ -54,18 +63,18 @@ export default function ProductModal() {
 	} = useForm<IProductPayload>({
 		resolver: yupResolver(productSchema)
 	});
-	const [open, setOpen] = React.useState(false);
-	const handleOpen = () => setOpen(true);
 	const handleClose = () => {
 		setOpen(false);
 		setSelectedImage('');
 		setCategory('');
+		setSelectedProduct(undefined);
 		reset();
 	};
 	const [category, setCategory] = React.useState('');
 	const [selectedImage, setSelectedImage] = React.useState<string | null>('');
 
 	const createMutation = useProductCreateMutation(handleClose);
+	const updateMutation = useProductUpdateMutation(handleClose);
 
 	const handleChange = (event: SelectChangeEvent) => {
 		setCategory(event.target.value as string);
@@ -73,7 +82,7 @@ export default function ProductModal() {
 	};
 
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		if(!event.target.files) {
+		if(!event.target.files || !selectedImage) {
 			setSelectedImage('');
 			setValue('main_image', '');
 			return;
@@ -87,6 +96,23 @@ export default function ProductModal() {
 		setError('main_image', { message: undefined });
 	};
 
+	React.useEffect(() => {
+		console.log(selectedProduct);
+		if (selectedProduct) {
+			setValue('name', selectedProduct.name);
+			setValue('longDescription', selectedProduct.longDescription);
+			setValue('shortDescription', selectedProduct.shortDescription);
+			setValue('quantity', selectedProduct.quantity);
+			setValue('price', selectedProduct.price);
+			setValue('categoryId', selectedProduct.categoryId);
+			setCategory(selectedProduct.categoryId.toString());
+			setSelectedImage(`${import.meta.env.VITE_BACKEND_URL}/images/products/${selectedProduct.main_image}`);
+			imageFetchToFile(`${import.meta.env.VITE_BACKEND_URL}/images/products/${selectedProduct.main_image}`).then((file) => {
+				setValue('main_image', file);
+			})
+		}
+	}, [selectedProduct, setValue]);
+
 	const onSubmit: SubmitHandler<IProductPayload> = (data) => {
 		console.log(data);
 
@@ -98,23 +124,27 @@ export default function ProductModal() {
 		formData.append('quantity', data.quantity.toString());
 		formData.append('price', data.price.toString());
 		formData.append('categoryId', data.categoryId.toString());
-		formData.append('main_image', data.main_image);
 
-		console.log(formData.get('main_image'));
+		if (data.main_image instanceof File) {
+			formData.append('main_image', data.main_image);
+		}
 
-		createMutation.mutate(formData);
+
+		if (selectedProduct) {
+			updateMutation.mutate({id: selectedProduct.id, data: formData});
+		} else {
+			createMutation.mutate(formData);
+		}
 	}
 
 	return (
 		<div>
-			<Button sx={{ marginBottom: "20px" }} variant={'contained'} onClick={handleOpen}>
+			<Button sx={{ marginBottom: "20px" }} variant={'contained'} onClick={() => setOpen(true)}>
 				Create product
 			</Button>
 			<Modal
 				open={open}
 				onClose={handleClose}
-				aria-labelledby="modal-modal-title"
-				aria-describedby="modal-modal-description"
 			>
 				<Box sx={style} component={'form'} onSubmit={handleSubmit(onSubmit)}>
 					<Typography id="modal-modal-title" variant="h6" component="h2">

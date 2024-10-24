@@ -9,9 +9,10 @@ import EditIcon from '@mui/icons-material/Edit';
 interface IProductListAdminProps {
 	setSelectedItem: (item: IProductBody | undefined) => void;
 	handleOpenConfirmModal: () => void;
+	handleOpenAddOrUpdateModal: () => void;
 }
 
-export default function ProductsListAdmin({ setSelectedItem, handleOpenConfirmModal }: IProductListAdminProps) {
+export default function ProductsListAdmin({ handleOpenAddOrUpdateModal, setSelectedItem, handleOpenConfirmModal }: IProductListAdminProps) {
 	const { data, isLoading, error } = UseProductQuery();
 	const { data: dataCategories } = UseCategoryQuery();
 	const columns: GridColDef<IProductBody>[] = [
@@ -101,15 +102,21 @@ export default function ProductsListAdmin({ setSelectedItem, handleOpenConfirmMo
 			headerName: 'Actions',
 			width: 150,
 			renderCell: (params) => {
+				const product = params.row;
+
 				const handleClick = () => {
-					const product = params.row;
 					setSelectedItem(product)
 					handleOpenConfirmModal();
 				}
 
+				const handleEdit = () => {
+					setSelectedItem(product);
+					handleOpenAddOrUpdateModal();
+				}
+
 				return (
 					<div>
-						<IconButton >
+						<IconButton onClick={handleEdit}>
 							<EditIcon color={'warning'}/>
 						</IconButton>
 						<IconButton onClick={handleClick}>

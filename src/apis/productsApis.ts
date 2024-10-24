@@ -12,6 +12,10 @@ const productsApis = {
     deleteProduct: (id: number) => {
         const url = `products/${id}`;
         return axiosClient.delete<unknown, IBackendResponse<IProductBody>>(url);
+    },
+    updateProduct: ({ id, data } : { id: number, data: FormData | IProductPayload}) => {
+        const url = `products/${id}`;
+        return axiosClient.put<unknown, IBackendResponse<IProductBody>>(url, data);
     }
 }
 

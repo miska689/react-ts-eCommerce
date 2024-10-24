@@ -5,9 +5,17 @@ import useProductDeleteMutation from "@/features/products/hooks/useProductDelete
 import React from "react";
 
 const ProductsAdminPage = () => {
+	// Add or update modal
+	const [openAddOrUpdateModal, setOpenAddOrUpdateModal] = React.useState(false);
+	// const handleCloseAddOrUpdateModal = () => setOpenAddOrUpdateModal(false);
+	const handleOpenAddOrUpdateModal = () => setOpenAddOrUpdateModal(true);
+
+	// Confirm modal
 	const [openConfirmModal, setOpenConfirmModal] = React.useState(false);
 	const handleCloseConfirmModal = () => setOpenConfirmModal(false);
 	const handleOpenConfirmModal = () => setOpenConfirmModal(true);
+
+	// Selected product
 	const [selectedProduct, setSelectedProduct] = React.useState<IProductBody | undefined>(undefined);
 
 	return (
@@ -19,8 +27,13 @@ const ProductsAdminPage = () => {
 				itemName={'product'}
 				getItemName={() => (selectedProduct ? selectedProduct.name : '')}
 				useDelete={useProductDeleteMutation}/>
-			<ProductModal/>
-			<ProductsListAdmin setSelectedItem={setSelectedProduct} handleOpenConfirmModal={handleOpenConfirmModal}/>
+			<ProductModal
+				open={openAddOrUpdateModal}
+				setOpen={setOpenAddOrUpdateModal}
+				selectedProduct={selectedProduct}
+				setSelectedProduct={setSelectedProduct}
+			/>
+			<ProductsListAdmin handleOpenAddOrUpdateModal={handleOpenAddOrUpdateModal} setSelectedItem={setSelectedProduct} handleOpenConfirmModal={handleOpenConfirmModal}/>
 		</div>
 	);
 };
