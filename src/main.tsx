@@ -22,7 +22,6 @@ import AdminRoute from "@/routes/admin.routes.tsx";
 import CategoryAdminPage from "@/features/category/pages/CategoryAdminPage.tsx";
 import ProductAdminPage from "@/features/products/pages/ProductsAdminPage.tsx";
 
-
 const router = createBrowserRouter([
 	{
 		path: '/',
