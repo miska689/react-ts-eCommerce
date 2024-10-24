@@ -6,7 +6,7 @@ import UseDeleteCategoryMutation from "@/features/category/hooks/useDeleteCatego
 import UpdateModal from "@/features/category/components/updateModal.tsx";
 
 const CategoryAdminPage = () => {
-	const [categoryId, setCategoryId] = React.useState<number>(0);
+	const [categoryId, setCategoryId] = React.useState<number | undefined>(undefined);
 	const deleteCategoryMutation = UseDeleteCategoryMutation();
 	const [openConfirmModal, setOpenConfirmModal] = React.useState(false);
 	const handleOpenConfirmModal = () => setOpenConfirmModal(true);
@@ -21,15 +21,11 @@ const CategoryAdminPage = () => {
 		}
 		handleCloseConfirmModal();
 	}
-	const handleConfirmUpdate = () => {
-		handleCloseUpdate();
-	}
-
 	return (
 
 		<div className={"dashboard_margin"}>
 			<AddCategoryModal/>
-			<UpdateModal openUpdate={openUpdate} handleOpenUpdate={handleOpenUpdate} handleCloseUpdate={handleCloseUpdate} handleConfirmUpdate={handleConfirmUpdate} categoryId={categoryId}/>
+			<UpdateModal openUpdate={openUpdate} handleOpenUpdate={handleOpenUpdate} handleCloseUpdate={handleCloseUpdate} categoryId={categoryId}/>
 			<CategoryListAdmin  handleOpenConfirmModal={ handleOpenConfirmModal } handleOpenUpdateModal={handleOpenUpdate} setCategoryId={setCategoryId}/>
 			<ConfirmModal openConfirmModal={openConfirmModal} handleOpenConfirmModal={handleOpenConfirmModal} handleCloseConfirmModal={handleCloseConfirmModal} handleConfirmDelete={handleConfirmDelete}/>
 		</div>

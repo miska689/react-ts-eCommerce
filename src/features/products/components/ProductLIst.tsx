@@ -1,13 +1,13 @@
 import {FunctionComponent, useEffect} from "react";
 import {Button} from "@mui/material";
-import productsClient from "@/apis/productsClient.ts";
+import productsApis from "@/apis/productsApis.ts";
 import {useAppSelector} from "@/redux/hook.ts";
 
 const ProductList: FunctionComponent = () => {
     const { isAuthenticated } = useAppSelector(state => state.user);
 
     const fetchProducts = async () => {
-        const res = productsClient.getAllProducts();
+        const res = productsApis.getAllProducts();
 
         console.log("Res: ", res);
     }

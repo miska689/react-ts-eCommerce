@@ -7,6 +7,7 @@ import {
 	QueryClient,
 	QueryClientProvider,
 } from '@tanstack/react-query'
+
 import './index.css'
 
 // Components
@@ -19,6 +20,7 @@ import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import Dashboard from "@/components/Dashboard/Dashboard.tsx";
 import AdminRoute from "@/routes/admin.routes.tsx";
 import CategoryAdminPage from "@/features/category/pages/CategoryAdminPage.tsx";
+import ProductAdminPage from "@/features/products/pages/ProductsAdminPage.tsx";
 
 
 const router = createBrowserRouter([
@@ -48,6 +50,10 @@ const router = createBrowserRouter([
 				path: 'category',
 				element: <CategoryAdminPage/>
 			},
+			{
+				path: 'product',
+				element: <ProductAdminPage/>
+			}
 		]
 	},
 	{

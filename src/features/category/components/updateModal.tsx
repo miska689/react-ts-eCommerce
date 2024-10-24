@@ -29,8 +29,7 @@ interface IUpdateModalProps {
 	openUpdate: boolean;
 	handleOpenUpdate: () => void;
 	handleCloseUpdate: () => void;
-	handleConfirmUpdate: () => void;
-	categoryId: number;
+	categoryId: number | undefined;
 }
 
 export default function UpdateModal({ openUpdate, handleCloseUpdate, categoryId }: IUpdateModalProps) {
@@ -49,9 +48,12 @@ export default function UpdateModal({ openUpdate, handleCloseUpdate, categoryId 
 	};
 
 	const onSubmit:SubmitHandler<ICategoryFormInput> = (data) => {
-		// console.log(data, categoryId);
-		updateMutation.mutate({ id: categoryId, data });
-		handleCloseUpdate();
+		if (categoryId !== undefined) {
+			// console.log(data, categoryId);
+			updateMutation.mutate({id: categoryId, data});
+			handleCloseUpdate();
+		}
+
 	}
 
 	return (

@@ -38,3 +38,32 @@ interface ICategoriesResponse {
 	icon: string
 	status: boolean
 }
+
+interface IProductBody {
+	id: number
+	name: string
+	longDescription: string
+	shortDescription: string
+	quantity: number
+	price: number
+	categoryId: number
+	main_image: string | File | null
+	createdAt: string
+	updatedAt: string
+	status: boolean
+	shopId: number
+}
+
+interface IProductPayload {
+	name: string
+	longDescription: string
+	shortDescription: string
+	quantity: number
+	price: number
+	categoryId: number
+	main_image: AnyPresentValue
+}
+
+interface IProductResponse extends IBackendResponse<IProductBody[]> {
+	totalCount: number
+}
