@@ -257,7 +257,7 @@ export default function ProductModal({ open, setOpen, selectedProduct, setSelect
 
 					<div>{ selectedImage ? <img alt={'photo'} style={{ width: '200px', marginBottom: '10px' }} src={selectedImage}/> : null}</div>
 					<Button type={'submit'} fullWidth variant={'contained'}>
-						Create
+						Submit
 					</Button>
 				</Box>
 			</Modal>
